@@ -174,7 +174,6 @@ void QtViewerMapping::mapMouseEvent(MouseEvent * mouseEvent)
                 break;
             case MouseButton::MouseButtonRight:
                 m_worldNavigation->rotateBegin(pos);
-                break;
             default:
                 break;
             }
@@ -212,45 +211,15 @@ void QtViewerMapping::mapMouseEvent(MouseEvent * mouseEvent)
         break;
 
     case QtViewerMapping::NavigationType::Trackball:
-        switch (mouseEvent->type())
+        switch (mouseEvent->buttonMask())
         {
-        case MouseEvent::Type::Press:
-            switch (mouseEvent->button())
-            {
-            case MouseButton::MouseButtonLeft:
-                m_trackballNavigation->panBegin(mouseEvent->position());
-                break;
-            case MouseButton::MouseButtonRight:
-                m_trackballNavigation->rotateBegin(mouseEvent->position());
-                break;
-            }
+        case MouseButton::MouseButtonLeft:
+            m_trackballNavigation->pan(mouseEvent->normalizedPositionDelta());
             break;
-
-        case MouseEvent::Type::Move:
-            switch (m_trackballNavigation->mode())
-            {
-            case TrackballNavigation::Mode::PAN:
-                m_trackballNavigation->pan(mouseEvent->position());
-                break;
-            case TrackballNavigation::Mode::ROTATE:
-                m_trackballNavigation->rotate(mouseEvent->position());
-                break;
-            }
+        case MouseButton::MouseButtonRight:
+            m_trackballNavigation->rotate(mouseEvent->normalizedLastPosition(), mouseEvent->normalizedPosition());
             break;
-
-        case MouseEvent::Type::Release:
-            switch (m_trackballNavigation->mode())
-            {
-            case TrackballNavigation::Mode::PAN:
-                m_trackballNavigation->panEnd();
-                break;
-            case TrackballNavigation::Mode::ROTATE:
-                m_trackballNavigation->rotateEnd();
-                break;
-            }
-            break;
-        }
-
+        };
         break;
     default:
         break;

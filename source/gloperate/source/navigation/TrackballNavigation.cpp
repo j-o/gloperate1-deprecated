@@ -19,11 +19,6 @@ TrackballNavigation::TrackballNavigation(AbstractCameraCapability * cameraCapabi
     reset();
 }
 
-TrackballNavigation::Mode TrackballNavigation::mode()
-{
-    return m_mode;
-}
-
 void TrackballNavigation::reset()
 {
     reset(m_cameraCapability->eye(), m_cameraCapability->center(), m_cameraCapability->up());
@@ -48,18 +43,6 @@ void TrackballNavigation::reset(const glm::dvec3& eye, const glm::dvec3& center,
     m_trackball.reset(rotationMatrix);
 }
 
-void TrackballNavigation::panBegin(const glm::ivec2& viewportPosition)
-{
-    m_mode = Mode::PAN;
-    m_lastViewportPosition = viewportPosition;
-}
-
-void TrackballNavigation::pan(const glm::ivec2& viewportPosition)
-{
-    pan(glm::dvec2(viewportPosition - m_lastViewportPosition) / viewport());
-    m_lastViewportPosition = viewportPosition;
-}
-
 void TrackballNavigation::pan(const glm::dvec2& normalizedDelta)
 {
     double scale = -0.3 * m_distance;
@@ -70,33 +53,11 @@ void TrackballNavigation::pan(const glm::dvec2& normalizedDelta)
     updateCamera();
 }
 
-void TrackballNavigation::panEnd()
-{
-    m_mode = Mode::NONE;
-}
-
-void TrackballNavigation::rotateBegin(const glm::ivec2& viewportPosition)
-{
-    m_mode = Mode::ROTATE;
-    m_lastViewportPosition = viewportPosition;
-}
-
-void TrackballNavigation::rotate(const glm::ivec2& viewportPosition)
-{
-    rotate(glm::dvec2(m_lastViewportPosition) / viewport() * 2.0 - 1.0, glm::dvec2(viewportPosition) / viewport() * 2.0 - 1.0);
-    m_lastViewportPosition = viewportPosition;
-}
-
 void TrackballNavigation::rotate(const glm::dvec2& normalizedFrom, const glm::dvec2& normalizedTo)
 {
     m_trackball.rotate(normalizedFrom, normalizedTo);
 
     updateCamera();
-}
-
-void TrackballNavigation::rotateEnd()
-{
-    m_mode = Mode::NONE;
 }
 
 void TrackballNavigation::zoom(double delta)
