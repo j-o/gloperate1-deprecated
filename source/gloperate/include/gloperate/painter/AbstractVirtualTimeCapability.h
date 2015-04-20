@@ -6,7 +6,7 @@
 #include <gloperate/painter/AbstractCapability.h>
 
 
-namespace gloperate 
+namespace gloperate
 {
 
 
@@ -65,7 +65,16 @@ public:
     *  @return
     *    Current time (in seconds)
     */
-    virtual float time() const = 0;
+    virtual double time() const = 0;
+
+    /**
+    *  @brief
+    *    Set virtual time
+    *
+    *  @param[in] time
+    *    Time (in seconds)
+    */
+    virtual void setTime(double time) = 0;
 
     /**
     *  @brief
@@ -74,7 +83,13 @@ public:
     *  @return
     *    Time delta (in seconds)
     */
-    virtual float delta() const = 0;
+    virtual double delta() const = 0;
+
+    /**
+    *  @brief
+    *    Get duration of a whole cycle (after that, time is reset to 0)
+    */
+    virtual double loopDuration() const = 0;
 
     /**
     *  @brief
@@ -83,16 +98,7 @@ public:
     *  @param[in] duration
     *    Duration after which time is reset to 0 (in seconds)
     */
-    virtual void setLoopDuration(float duration) = 0;
-
-    /**
-    *  @brief
-    *    Update virtual time
-    *
-    *  @param[in] delta
-    *    Time delta (in seconds)
-    */
-    virtual void update(float delta) = 0;
+    virtual void setLoopDuration(double duration) = 0;
 };
 
 
