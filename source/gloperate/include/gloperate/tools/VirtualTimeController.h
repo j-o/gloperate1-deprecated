@@ -31,6 +31,13 @@ public:
 
     double duration() const;
 
+public:
+    signalzeug::Signal<double> onTimeChanged;
+    signalzeug::Signal<double> onDurationChanged;
+    signalzeug::Signal<double> onSpeedChanged;
+    signalzeug::Signal<bool>   onLoopChanged;
+    signalzeug::Signal<bool>   onActiveChanged;
+
 protected:
     using Clock = std::chrono::high_resolution_clock;
     using Tick = Clock::time_point;

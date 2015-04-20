@@ -34,6 +34,18 @@ bool VirtualTimeController::active() const
 void VirtualTimeController::setActive(bool active)
 {
     m_capability->setEnabled(active);
+
+    if (active)
+    {
+        m_lastTick = Clock::now();
+
+        if (loop() && m_time >= m_capability->loopDuration())
+        {
+            setTime(0.0);
+        }
+    }
+
+    onActiveChanged(active());
 }
 
 double VirtualTimeController::speed() const
@@ -44,6 +56,8 @@ double VirtualTimeController::speed() const
 void VirtualTimeController::setSpeed(double speed)
 {
     m_speed = speed;
+
+    onSpeedChanged(speed());
 }
 
 double VirtualTimeController::time() const
@@ -72,6 +86,8 @@ void VirtualTimeController::setTime(double time)
     }
 
     m_capability->setTime(m_time);
+
+    onTimeChanged(time());
 }
 
 double VirtualTimeController::duration() const
@@ -87,6 +103,8 @@ bool VirtualTimeController::loop() const
 void VirtualTimeController::setLoop(bool enabled)
 {
     m_loop = enabled;
+
+    onLoopChanged(loop());
 }
 
 } /* namespace gloperate */
