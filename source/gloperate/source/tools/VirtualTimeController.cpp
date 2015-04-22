@@ -19,7 +19,7 @@ void VirtualTimeController::update()
     if (active())
     {
         const Tick now = Clock::now();
-        const auto timeDiff = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_lastTick).count();
+        const auto timeDiff = std::chrono::duration_cast<std::chrono::duration<double>>(now - m_lastTick).count();
         m_lastTick = now;
 
         setTime(m_time + (timeDiff * m_speed));

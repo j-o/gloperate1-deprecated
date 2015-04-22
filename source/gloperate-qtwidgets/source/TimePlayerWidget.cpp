@@ -108,16 +108,16 @@ void TimePlayerWidget::updateTimeUI(double time)
     const auto duration = m_controller->duration();
     const auto progress = time / duration;
 
-    const auto signalBlocker = MultiSignalBlocker({ui->timeSlider, ui->timeSpinBox});
+    const auto signalBlocker = MultiSignalBlocker({ ui->timeSlider, ui->timeSpinBox });
 
     ui->timeSlider->setValue(progress * ui->timeSlider->maximum());
-    ui->timeSpinBox->setValue(time / 1000.0);
-    ui->remainingTimeLabel->setText(QString::number((duration - time) / 1000.0, 'f', 3));
+    ui->timeSpinBox->setValue(time);
+    ui->remainingTimeLabel->setText(QString::number((duration - time), 'f', 3));
 }
 
 void TimePlayerWidget::updateDurationUI(double duration)
 {
-    ui->timeSpinBox->setMaximum(duration / 1000.0);
+    ui->timeSpinBox->setMaximum(duration);
 }
 
 void TimePlayerWidget::updateSpeedUI(double speed)
@@ -180,7 +180,7 @@ void TimePlayerWidget::on_timeSlider_sliderReleased()
 
 void TimePlayerWidget::on_timeSpinBox_valueChanged(double value)
 {
-    m_controller->setTime(value * 1000.0);
+    m_controller->setTime(value);
 }
 
 void TimePlayerWidget::on_speedSlider_valueChanged(int value)
