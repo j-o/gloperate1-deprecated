@@ -31,11 +31,11 @@ bool VirtualTimeController::active() const
     return m_capability->enabled();
 }
 
-void VirtualTimeController::setActive(bool active)
+void VirtualTimeController::setActive(bool newActive)
 {
-    m_capability->setEnabled(active);
+    m_capability->setEnabled(newActive);
 
-    if (active)
+    if (newActive)
     {
         m_lastTick = Clock::now();
 
@@ -53,9 +53,9 @@ double VirtualTimeController::speed() const
     return m_speed;
 }
 
-void VirtualTimeController::setSpeed(double speed)
+void VirtualTimeController::setSpeed(double newSpeed)
 {
-    m_speed = speed;
+    m_speed = newSpeed;
 
     onSpeedChanged(speed());
 }
@@ -65,9 +65,9 @@ double VirtualTimeController::time() const
     return m_time;
 }
 
-void VirtualTimeController::setTime(double time)
+void VirtualTimeController::setTime(double newTime)
 {
-    m_time = time;
+    m_time = newTime;
 
     if (loop())
     {

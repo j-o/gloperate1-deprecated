@@ -2,6 +2,8 @@
 
 #include <chrono>
 
+#include <signalzeug/Signal.h>
+
 #include <gloperate/gloperate_api.h>
 
 
