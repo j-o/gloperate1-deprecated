@@ -120,7 +120,7 @@ protected:
         m_depth->storage(gl::GL_DEPTH_COMPONENT32, viewport.data()->width(), viewport.data()->height());
 
         m_program->setUniform("transform", projection.data()->projection() * camera.data()->view());
-        m_program->setUniform("timef", time.data()->time());
+        m_program->setUniform("timef", static_cast<float>(time.data()->time()));
 
         m_fbo->bind(gl::GL_FRAMEBUFFER);
         m_fbo->setDrawBuffers({ gl::GL_COLOR_ATTACHMENT0, gl::GL_COLOR_ATTACHMENT1, gl::GL_COLOR_ATTACHMENT2 });

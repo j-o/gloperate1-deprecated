@@ -201,7 +201,7 @@ void CubeScape::onPaint()
     m_program->use();
 
     m_program->setUniform(u_transform, transform);
-    m_program->setUniform(u_time, m_timeCapability->time());
+    m_program->setUniform(u_time, static_cast<float>(m_timeCapability->time()));
     m_program->setUniform(u_numcubes, m_numCubes);
 
     m_textures[0]->bindActive(GL_TEXTURE0);
