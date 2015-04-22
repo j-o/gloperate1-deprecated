@@ -83,6 +83,7 @@ set(api_includes
     ${header_path}/gloperate-qtwidgets_api.h
     ${header_path}/ScreenshotWidget.h
     ${header_path}/TimePlayerWidget.h
+    ${header_path}/VirtualTimeControlWidget.h
 
 )
 
@@ -91,6 +92,7 @@ set(sources
     ${source_path}/ScreenshotWidget.ui
     ${source_path}/TimePlayerWidget.cpp
     ${source_path}/TimePlayerWidget.ui
+    ${source_path}/VirtualTimeControlWidget.cpp
 )
 
 # Group source files
