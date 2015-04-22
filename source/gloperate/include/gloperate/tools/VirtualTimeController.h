@@ -1,8 +1,11 @@
 #pragma once
 
+
 #include <chrono>
+#include <deque>
 
 #include <signalzeug/Signal.h>
+#include <signalzeug/ScopedConnection.h>
 
 #include <gloperate/gloperate_api.h>
 
@@ -15,7 +18,11 @@ class AbstractVirtualTimeCapability;
 class GLOPERATE_API VirtualTimeController
 {
 public:
-    VirtualTimeController(AbstractVirtualTimeCapability* capability);
+    VirtualTimeController(AbstractVirtualTimeCapability * capability);
+    VirtualTimeController(const VirtualTimeController &) = delete;
+
+    void setCapability(AbstractVirtualTimeCapability * capability);
+    AbstractVirtualTimeCapability * capability() const;
 
     void update();
 
@@ -33,6 +40,8 @@ public:
 
     double duration() const;
 
+    VirtualTimeController& operator=(const VirtualTimeController &) = delete;
+
 public:
     signalzeug::Signal<double> onTimeChanged;
     signalzeug::Signal<double> onDurationChanged;
@@ -45,7 +54,8 @@ protected:
     using Tick = Clock::time_point;
 
 protected:
-    AbstractVirtualTimeCapability* m_capability;
+    AbstractVirtualTimeCapability * m_capability;
+    std::deque<signalzeug::ScopedConnection> m_capabilityConnections;
 
     bool m_loop;
     double m_speed;

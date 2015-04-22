@@ -30,6 +30,8 @@ void VirtualTimeCapability::setEnabled(bool enabled)
     m_enabled = enabled;
 
     setChanged(true);
+
+    onEnabledChanged(m_enabled);
 }
 
 double VirtualTimeCapability::time() const
@@ -62,6 +64,8 @@ void VirtualTimeCapability::setLoopDuration(double duration)
     m_duration = duration;
 
     setChanged(true);
+
+    onLoopDurationChanged(m_duration);
 }
 
 

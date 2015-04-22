@@ -7,11 +7,27 @@ namespace gloperate
 {
 
 VirtualTimeController::VirtualTimeController(AbstractVirtualTimeCapability* capability)
-: m_capability(capability)
+: m_capability(nullptr)
 , m_loop(true)
 , m_speed(1.0)
 , m_time(0.0)
 {
+    setCapability(capability);
+}
+
+void VirtualTimeController::setCapability(AbstractVirtualTimeCapability * capability)
+{
+    m_capabilityConnections.clear();
+
+    m_capability = capability;
+
+    m_capabilityConnections.emplace_back(m_capability->onEnabledChanged.connect(onActiveChanged));
+    m_capabilityConnections.emplace_back(m_capability->onLoopDurationChanged.connect(onDurationChanged));
+}
+
+AbstractVirtualTimeCapability * VirtualTimeController::capability() const
+{
+    return m_capability;
 }
 
 void VirtualTimeController::update()

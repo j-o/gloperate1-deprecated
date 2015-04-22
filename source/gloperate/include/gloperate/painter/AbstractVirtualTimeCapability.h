@@ -99,6 +99,20 @@ public:
     *    Duration after which time is reset to 0 (in seconds)
     */
     virtual void setLoopDuration(double duration) = 0;
+
+    
+public:
+    /**
+    *  @brief
+    *    Triggered when loop duration has changed
+    */
+    signalzeug::Signal<double> onLoopDurationChanged;
+
+    /**
+    *  @brief
+    *    Triggered when virtual time was enabled or disabled
+    */
+    signalzeug::Signal<bool>   onEnabledChanged;
 };
 
 
