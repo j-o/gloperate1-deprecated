@@ -2,6 +2,7 @@
 #include "ui_TimePlayerWidget.h"
 
 #include <QProxyStyle>
+#include <QSignalBlocker>
 
 #include <gloperate/tools/VirtualTimeController.h>
 
@@ -38,21 +39,63 @@ public:
     }
 };
 
+class MultiSignalBlocker
+{
+public:
+    MultiSignalBlocker(const std::vector<QObject*>& objs)
+    {
+        for (auto obj : objs)
+        {
+            m_blockers.emplace_back(obj);
+        }
+    }
+
+private:
+    std::vector<QSignalBlocker> m_blockers;
+};
+
 }  // anonymous namespace
 
 
 TimePlayerWidget::TimePlayerWidget(VirtualTimeController* controller, QWidget* parent)
 : QWidget(parent)
 , ui(new Ui::TimePlayerWidget)
-, m_uiUpdate(false)
-, m_controller(controller)
+, m_controller(nullptr)
 {
     ui->setupUi(this);
     ui->timeSlider->setStyle(new DirectJumpSliderStyle(ui->timeSlider->style()));
 
-    m_controller->setLoop(ui->loopCheckBox->isChecked());
+    setController(controller);
 
     connect(ui->playPauseButton, &QPushButton::clicked, this, &TimePlayerWidget::togglePlayPause);
+}
+
+void TimePlayerWidget::setController(gloperate::VirtualTimeController * controller)
+{
+    m_controllerConnections.clear();
+
+    m_controller = controller;
+    if (m_controller == nullptr)
+    {
+        return;
+    }
+
+    updateTimeUI(m_controller->time());
+    updateDurationUI(m_controller->duration());
+    updateSpeedUI(m_controller->speed());
+    updateActiveUI(m_controller->active());
+    updateLoopUI(m_controller->loop());
+
+    m_controllerConnections.emplace_back(m_controller->onTimeChanged.connect(this, &TimePlayerWidget::updateTimeUI));
+    m_controllerConnections.emplace_back(m_controller->onDurationChanged.connect(this, &TimePlayerWidget::updateDurationUI));
+    m_controllerConnections.emplace_back(m_controller->onSpeedChanged.connect(this, &TimePlayerWidget::updateSpeedUI));
+    m_controllerConnections.emplace_back(m_controller->onActiveChanged.connect(this, &TimePlayerWidget::updateActiveUI));
+    m_controllerConnections.emplace_back(m_controller->onLoopChanged.connect(this, &TimePlayerWidget::updateLoopUI));
+}
+
+gloperate::VirtualTimeController * TimePlayerWidget::controller() const
+{
+    return m_controller;
 }
 
 void TimePlayerWidget::togglePlayPause()
@@ -62,15 +105,14 @@ void TimePlayerWidget::togglePlayPause()
 
 void TimePlayerWidget::updateTimeUI(double time)
 {
-    const auto time = m_controller->time();
     const auto duration = m_controller->duration();
     const auto progress = time / duration;
 
-    m_uiUpdate = true;
+    const auto signalBlocker = MultiSignalBlocker({ui->timeSlider, ui->timeSpinBox});
+
     ui->timeSlider->setValue(progress * ui->timeSlider->maximum());
     ui->timeSpinBox->setValue(time / 1000.0);
     ui->remainingTimeLabel->setText(QString::number((duration - time) / 1000.0, 'f', 3));
-    m_uiUpdate = false;
 }
 
 void TimePlayerWidget::updateDurationUI(double duration)
@@ -80,15 +122,17 @@ void TimePlayerWidget::updateDurationUI(double duration)
 
 void TimePlayerWidget::updateSpeedUI(double speed)
 {
-    m_uiUpdate = true;
+    const auto signalBlocker = MultiSignalBlocker({ ui->speedSlider, ui->speedSpinBox });
+
     const auto scaledSpeed = 61.7356 * std::log(speed + 0.0499157);
     ui->speedSlider->setValue(scaledSpeed);
     ui->speedSpinBox->setValue(speed);
-    m_uiUpdate = false;
 }
 
 void TimePlayerWidget::updateActiveUI(bool active)
 {
+    const auto signalBlocker = MultiSignalBlocker({ ui->playPauseButton });
+
     if (active)
     {
         ui->playPauseButton->setText("Pause");
@@ -101,6 +145,8 @@ void TimePlayerWidget::updateActiveUI(bool active)
 
 void TimePlayerWidget::updateLoopUI(bool loop)
 {
+    const auto signalBlocker = MultiSignalBlocker({ ui->loopCheckBox });
+
     ui->loopCheckBox->setChecked(loop);
 }
 
@@ -111,11 +157,8 @@ void TimePlayerWidget::on_loopCheckBox_toggled(bool checked)
 
 void TimePlayerWidget::on_timeSlider_valueChanged(int value)
 {
-    if (!m_uiUpdate)
-    {
-        const auto progress = static_cast<double>(value) / static_cast<double>(ui->timeSlider->maximum());
-        m_controller->setTime(progress * m_controller->duration());
-    }
+    const auto progress = static_cast<double>(value) / static_cast<double>(ui->timeSlider->maximum());
+    m_controller->setTime(progress * m_controller->duration());
 }
 
 void TimePlayerWidget::on_timeSlider_sliderPressed()
@@ -137,27 +180,18 @@ void TimePlayerWidget::on_timeSlider_sliderReleased()
 
 void TimePlayerWidget::on_timeSpinBox_valueChanged(double value)
 {
-    if (!m_uiUpdate)
-    {
-        m_controller->setTime(value * 1000.0);
-    }
+    m_controller->setTime(value * 1000.0);
 }
 
 void TimePlayerWidget::on_speedSlider_valueChanged(int value)
 {
-    if (!m_uiUpdate)
-    {
-        const auto scaledValue = -0.0499157 + std::pow(1.01633, value);
-        m_controller->setSpeed(scaledValue);
-    }
+    const auto scaledValue = -0.0499157 + std::pow(1.01633, value);
+    m_controller->setSpeed(scaledValue);
 }
 
 void TimePlayerWidget::on_speedSpinBox_valueChanged(double value)
 {
-    if (!m_uiUpdate)
-    {
-        m_controller->setSpeed(value);
-    }
+    m_controller->setSpeed(value);
 }
 
 }  // namespace gloperate_qtwidgets

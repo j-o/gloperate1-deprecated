@@ -1,8 +1,10 @@
 #pragma once
 
-#include <QWidget>
-#include <QTimer>
+#include <deque>
 
+#include <QWidget>
+
+#include <signalzeug/ScopedConnection.h>
 
 
 namespace gloperate
@@ -24,7 +26,10 @@ class TimePlayerWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit TimePlayerWidget(gloperate::VirtualTimeController* controller, QWidget* parent = 0);
+    explicit TimePlayerWidget(gloperate::VirtualTimeController * controller, QWidget * parent = 0);
+
+    void setController(gloperate::VirtualTimeController * controller);
+    gloperate::VirtualTimeController * controller() const;
 
 public slots:
     void togglePlayPause();
@@ -49,10 +54,10 @@ protected slots:
 
 protected:
     const QScopedPointer<Ui::TimePlayerWidget> ui;
-    bool m_uiUpdate;
     bool m_activeWhenSliderDown;
 
-    gloperate::VirtualTimeController* m_controller;
+    gloperate::VirtualTimeController * m_controller;
+    std::deque<signalzeug::ScopedConnection> m_controllerConnections;
 };
 
 } // namespace gloperate_qtwidgets
