@@ -6,6 +6,10 @@
 \******************************************************************************/
 #include <gloperate-qt/QtMouseEventProvider.h>
 
+#include <gloperate-qt/qt-includes-begin.h>
+#include <QWindow>
+#include <gloperate-qt/qt-includes-end.h>
+
 #include <gloperate/input/input.h>
 #include <gloperate/input/MouseEvent.h>
 
@@ -39,17 +43,24 @@ bool QtMouseEventProvider::eventFilter(QObject * obj, QEvent * event)
         event->type() == QEvent::MouseButtonDblClick ||
         event->type() == QEvent::MouseMove)
     {
-        QMouseEvent * qMouseEvent = dynamic_cast<QMouseEvent*>(event);
-        if (qMouseEvent) {
+        auto qMouseEvent = dynamic_cast<QMouseEvent*>(event);
+        auto window = dynamic_cast<QWindow*>(obj);
+        if (qMouseEvent && window) {
             auto eventType = QtEventTransformer::mouseTypeFromQtType(qMouseEvent->type());
             auto position = QtEventTransformer::fromQPoint(qMouseEvent->pos());
             auto button = QtEventTransformer::fromQtMouseButton(qMouseEvent->button());
-            MouseEvent * mouseEvent =
+            auto buttonMask = QtEventTransformer::fromQtMouseButtons(qMouseEvent->buttons());
+            auto modifiers = QtEventTransformer::fromQtKeyboardModifiers(qMouseEvent->modifiers());
+            auto mouseEvent =
                     new MouseEvent(eventType,
                                       position,
+                                      m_lastPos,
+                                      { window->width(), window->height() },
                                       button,
-                                      static_cast<int>(qMouseEvent->modifiers()));
-            passEvent(mouseEvent);
+                                      buttonMask,
+                                      modifiers);
+            m_lastPos = position;
+            passEventWithContext(obj, mouseEvent);
             return false;
         }
     }
@@ -57,10 +68,16 @@ bool QtMouseEventProvider::eventFilter(QObject * obj, QEvent * event)
     if (event->type() == QEvent::Enter ||
         event->type() == QEvent::Leave)
     {
+        auto qEnterEvent = dynamic_cast<QEnterEvent*>(event);
+        if (qEnterEvent)
+        {
+            m_lastPos = QtEventTransformer::fromQPoint(qEnterEvent->pos());
+        }
+
         auto eventType = QtEventTransformer::mouseTypeFromQtType(event->type());
-        MouseEvent * mouseEvent =
-                new MouseEvent(eventType, glm::ivec2(),NoMouseButton, static_cast<int>(Qt::NoModifier));
-        passEvent(mouseEvent);
+        auto mouseEvent =
+            new MouseEvent(eventType, glm::ivec2(), glm::ivec2(), glm::ivec2(), MouseButton::NoMouseButton, MouseButton::NoMouseButton, KeyModifier::ModNone);
+        passEventWithContext(obj, mouseEvent);
         return false;
     }
     return QObject::eventFilter(obj, event);

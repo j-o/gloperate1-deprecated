@@ -91,8 +91,9 @@ set(include_path "${CMAKE_CURRENT_SOURCE_DIR}/include/${target}")
 set(source_path "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
 set(sources
-    ${source_path}/AbstractQtMapping.cpp
+    ${source_path}/AbstractQtEventProvider.cpp
     ${source_path}/QtEventTransformer.cpp
+    ${source_path}/QtFrameEventProvider.cpp
     ${source_path}/QtKeyEventProvider.cpp
     ${source_path}/QtMouseEventProvider.cpp
     ${source_path}/QtOpenGLWindow.cpp
@@ -105,8 +106,9 @@ set(sources
 )
 
 set(headers
-    ${include_path}/AbstractQtMapping.h
+    ${include_path}/AbstractQtEventProvider.h
     ${include_path}/QtEventTransformer.h
+    ${include_path}/QtFrameEventProvider.h
     ${include_path}/QtKeyEventProvider.h
     ${include_path}/QtMouseEventProvider.h
     ${include_path}/QtOpenGLWindow.h

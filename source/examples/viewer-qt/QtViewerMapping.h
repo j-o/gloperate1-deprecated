@@ -1,6 +1,6 @@
 #pragma once
 
-#include <gloperate-qt/AbstractQtMapping.h>
+#include <gloperate/navigation/AbstractMapping.h>
 
 #include <memory>
 
@@ -21,7 +21,12 @@ namespace gloperate
     class WheelEvent;
 }
 
-class QtViewerMapping : public gloperate_qt::AbstractQtMapping
+namespace gloperate_qt
+{
+    class QtOpenGLWindow;
+}
+
+class QtViewerMapping : public gloperate::AbstractMapping
 {
 public:
     QtViewerMapping(gloperate_qt::QtOpenGLWindow * window);
@@ -50,5 +55,6 @@ protected:
     std::unique_ptr<gloperate::TrackballNavigation> m_trackballNavigation;
     std::unique_ptr<gloperate::CoordinateProvider> m_coordProvider;
     std::unique_ptr<gloperate::TypedRenderTargetCapability> m_renderTarget;
+    gloperate_qt::QtOpenGLWindow * m_window;
     NavigationType m_currentNavigation;
 };

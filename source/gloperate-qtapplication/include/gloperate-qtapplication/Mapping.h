@@ -6,7 +6,7 @@
 
 #include <glm/glm.hpp>
 
-#include <gloperate-qt/AbstractQtMapping.h>
+#include <gloperate/navigation/AbstractMapping.h>
 
 #include <gloperate-qtapplication/gloperate-qtapplication_api.h>
 
@@ -25,10 +25,15 @@ namespace gloperate
     class WheelEvent;
 }
 
+namespace gloperate_qt
+{
+    class QtOpenGLWindow;
+}
+
 namespace gloperate_qtapplication
 {
 
-class GLOPERATE_QTAPPLICATION_API Mapping : public QObject, public gloperate_qt::AbstractQtMapping
+class GLOPERATE_QTAPPLICATION_API Mapping : public QObject, public gloperate::AbstractMapping
 {
 Q_OBJECT
 
@@ -59,6 +64,7 @@ protected:
     gloperate::AbstractViewportCapability * m_viewportCapability;
     gloperate::TypedRenderTargetCapability * m_typedRenderTargetCapability;
     QTimer * m_timer;
+    gloperate_qt::QtOpenGLWindow * m_window;
     glm::ivec2 m_currentMousePosition;
 };
 
