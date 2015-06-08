@@ -162,7 +162,7 @@ void QtViewerMapping::mapMouseEvent(MouseEvent * mouseEvent)
     case QtViewerMapping::NavigationType::WorldInHand:
         if (mouseEvent && mouseEvent->type() == MouseEvent::Type::Press)
         {
-            const auto pos = mouseEvent->position() * static_cast<int>(m_window->devicePixelRatio());
+            const auto pos = mouseEvent->position();
 
             switch (mouseEvent->button())
             {
@@ -180,7 +180,7 @@ void QtViewerMapping::mapMouseEvent(MouseEvent * mouseEvent)
         }
         else if (mouseEvent && mouseEvent->type() == MouseEvent::Type::Move)
         {
-            const auto pos = mouseEvent->position() * static_cast<int>(m_window->devicePixelRatio());
+            const auto pos = mouseEvent->position();
         
             switch (m_worldNavigation->mode())
             {
