@@ -1,18 +1,25 @@
 
+# Target
+
 set(target gloperate-qtapplication)
+
+
+# External packages
 
 find_package(Qt5Core    5.1 QUIET)
 find_package(Qt5Gui     5.1 QUIET)
 find_package(Qt5Widgets 5.1 QUIET) # this is also important in order to get uic working 
+find_package(Qt5OpenGL  5.1 QUIET)
+find_package(ASSIMP QUIET)
 
 if (NOT Qt5Core_FOUND)
-    message(STATUS "Tool ${target} (disabled because Qt5 couldn't be found)")
+    message(STATUS "Lib ${target} (disabled because Qt5 couldn't be found)")
     return()
 endif()
 
-message(STATUS "Lib ${target}")
-
-# External libraries
+if (ASSIMP_FOUND)
+   add_definitions("-DGLOPERATE_ASSIMP_FOUND")
+endif()
 
 find_package(OpenGL REQUIRED)
 find_package(GLM REQUIRED)
@@ -33,13 +40,18 @@ set(AUTOMOC_MOC_OPTIONS PROPERTIES FOLDER CMakeAutomocTargets)
 # What we do not want is automocs beside the project -> http://www.cmake.org/Bug/view.php?id=13688
 set_property(GLOBAL PROPERTY AUTOMOC_FOLDER CMakeAutomocTargets)
 
+
+# Announce target
+message(STATUS "Lib ${target}")
+
+
 # Includes
 
 include_directories(
     ${GLM_INCLUDE_DIR}
-    ${GLBINDING_INCLUDES}
-    ${GLOBJECTS_INCLUDES}
-    ${LIBZEUG_INCLUDES}
+    ${GLBINDING_INCLUDE_DIRS}
+    ${GLOBJECTS_INCLUDE_DIRS}
+    ${LIBZEUG_INCLUDE_DIRS}
 )
 
 include_directories(
@@ -50,6 +62,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/source/gloperate/include
     ${CMAKE_SOURCE_DIR}/source/gloperate-qt/include
     ${CMAKE_SOURCE_DIR}/source/gloperate-qtwidgets/include
+    ${CMAKE_SOURCE_DIR}/source/gloperate-assimp/include
 )
 
 
@@ -64,6 +77,11 @@ set(libs
     gloperate-qtwidgets
 )
 
+if (ASSIMP_FOUND)
+    list(APPEND libs "gloperate-assimp")
+endif ()
+
+
 # Compiler definitions
 
 if (OPTION_BUILD_STATIC)
@@ -71,6 +89,7 @@ if (OPTION_BUILD_STATIC)
 else()
     add_definitions("-DGLOPERATE_QTAPPLICATION_EXPORTS")
 endif()
+
 
 # Sources
 
@@ -121,6 +140,7 @@ set_target_properties(${target}
     LINK_FLAGS_RELEASE          "${DEFAULT_LINKER_FLAGS_RELEASE}"
     DEBUG_POSTFIX               "d${DEBUG_POSTFIX}"
     INCLUDE_PATH                ${include_path})
+
 
 # Deployment
 

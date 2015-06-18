@@ -32,10 +32,10 @@ set_property(GLOBAL PROPERTY AUTOMOC_FOLDER CMakeAutomocTargets)
 # Includes
 
 include_directories(
-    ${GLBINDING_INCLUDES}
-    ${GLOBJECTS_INCLUDES}
-    ${LIBZEUG_INCLUDES}
     ${GLM_INCLUDE_DIR}
+    ${GLBINDING_INCLUDE_DIRS}
+    ${GLOBJECTS_INCLUDE_DIRS}
+    ${LIBZEUG_INCLUDE_DIRS}
     ${GLOPERATE_QT_INCLUDE_DIR}
 )
 
@@ -68,7 +68,7 @@ set(libs
 # Compiler definitions
 
 if (OPTION_BUILD_STATIC)
-    add_definitions("-DGLOPERATE_QTWIDGETS_STATIC")
+    add_definitions("-DGLOPERATE_STATIC")
 else()
     add_definitions("-DGLOPERATE_QTWIDGETS_EXPORTS")
 endif()

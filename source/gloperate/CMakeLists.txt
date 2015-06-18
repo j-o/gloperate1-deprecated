@@ -15,9 +15,9 @@ find_package(libzeug REQUIRED)
 
 include_directories(
     ${GLM_INCLUDE_DIR}
-    ${GLBINDING_INCLUDES}
-    ${GLOBJECTS_INCLUDES}
-    ${LIBZEUG_INCLUDES}
+    ${GLBINDING_INCLUDE_DIRS}
+    ${GLOBJECTS_INCLUDE_DIRS}
+    ${LIBZEUG_INCLUDE_DIRS}
 )
 
 include_directories(
@@ -114,7 +114,8 @@ set(sources
     ${source_path}/plugin/PluginManager.cpp
     ${source_path}/plugin/Plugin.cpp
     ${source_path}/plugin/PluginLibrary.cpp
-    
+
+    ${source_path}/primitives/AbstractDrawable.cpp
     ${source_path}/primitives/Plane3.cpp
     ${source_path}/primitives/VertexDrawable.cpp
     ${source_path}/primitives/UniformGroup.cpp
@@ -123,6 +124,9 @@ set(sources
     ${source_path}/primitives/Icosahedron.cpp
     ${source_path}/primitives/Plane3.h
     ${source_path}/primitives/AdaptiveGrid.cpp
+    ${source_path}/primitives/PolygonalGeometry.cpp
+    ${source_path}/primitives/PolygonalDrawable.cpp
+    ${source_path}/primitives/Scene.cpp
     
     ${source_path}/resources/AbstractStorer.cpp
     ${source_path}/resources/AbstractLoader.cpp
@@ -215,6 +219,7 @@ set(api_includes
     ${include_path}/plugin/PainterPlugin.h
     ${include_path}/plugin/PluginManager.h
     
+    ${include_path}/primitives/AbstractDrawable.h
     ${include_path}/primitives/UniformGroup.hpp
     ${include_path}/primitives/Interpolation.h
     ${include_path}/primitives/VertexDrawable.h
@@ -223,6 +228,9 @@ set(api_includes
     ${include_path}/primitives/Icosahedron.h
     ${include_path}/primitives/AxisAlignedBoundingBox.h
     ${include_path}/primitives/UniformGroup.h
+    ${include_path}/primitives/PolygonalGeometry.h
+    ${include_path}/primitives/PolygonalDrawable.h
+    ${include_path}/primitives/Scene.h
     
     ${include_path}/resources/ResourceManager.hpp
     ${include_path}/resources/RawFile.h
