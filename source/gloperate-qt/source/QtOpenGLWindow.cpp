@@ -18,8 +18,10 @@
 #include <gloperate/base/make_unique.hpp>
 #include <gloperate/painter/AbstractViewportCapability.h>
 #include <gloperate/painter/AbstractInputCapability.h>
+#include <gloperate/painter/AbstractVirtualTimeCapability.h>
 #include <gloperate/resources/ResourceManager.h>
 #include <gloperate/tools/ScreenshotTool.h>
+#include <gloperate/tools/VirtualTimeController.h>
 
 #include <gloperate-qt/QtEventTransformer.h>
 
@@ -35,8 +37,9 @@ namespace gloperate_qt
 QtOpenGLWindow::QtOpenGLWindow(gloperate::ResourceManager & resourceManager)
 :   m_resourceManager(resourceManager)
 ,   m_painter(nullptr)
-,   m_timePropagator(nullptr)
+,   m_timePropagator(make_unique<TimePropagator>(this))
 {
+    m_timePropagator->setController(m_virtualTime.get());
 }
 
 /**
@@ -47,8 +50,9 @@ QtOpenGLWindow::QtOpenGLWindow(gloperate::ResourceManager & resourceManager, con
 :   QtOpenGLWindowBase(format)
 ,   m_resourceManager(resourceManager)
 ,   m_painter(nullptr)
-,   m_timePropagator(nullptr)
+,   m_timePropagator(make_unique<TimePropagator>(this))
 {
+    m_timePropagator->setController(m_virtualTime.get());
 }
 
 /**
@@ -77,17 +81,16 @@ void QtOpenGLWindow::setPainter(Painter * painter)
     // Save painter
     m_painter = painter;
 
-    // Destroy old time propagator
-    m_timePropagator = nullptr;
+    // Disconnect virtual time
+    m_virtualTime->setCapability(nullptr);
 
     if (!m_painter)
         return;
     
-    m_timePropagator = make_unique<TimePropagator>(this);
 
     // Check for virtual time capability
     if (m_painter->supports<AbstractVirtualTimeCapability>())
-        m_timePropagator->setCapability(m_painter->getCapability<AbstractVirtualTimeCapability>());
+        m_virtualTime->setCapability(m_painter->getCapability<AbstractVirtualTimeCapability>());
 
     m_initialized = false;
 }

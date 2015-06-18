@@ -9,6 +9,7 @@
 #include <globjects/base/ref_ptr.h>
 
 #include <gloperate/painter/Painter.h>
+#include <gloperate/base/AbstractWindow.h>
 
 #include <gloperate-glfw/gloperate-glfw_api.h>
 
@@ -41,7 +42,7 @@ class Context;
 
 /** \brief Attach a WindowEventHandlerBase specialization for event handling.
  */
-class GLOPERATE_GLFW_API Window
+class GLOPERATE_GLFW_API Window : public gloperate::AbstractWindow
 {
 public:
     static int init();

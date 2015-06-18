@@ -13,6 +13,7 @@
 #include <gloperate/painter/AbstractInputCapability.h>
 
 #include <gloperate/tools/ScreenshotTool.h>
+#include <gloperate/tools/VirtualTimeController.h>
 
 
 using namespace gloperate;
@@ -161,16 +162,8 @@ void WindowEventHandler::mouseReleaseEvent(MouseEvent & event)
 
 void WindowEventHandler::timerEvent(TimerEvent & event)
 {
-    if (!event.window()->painter())
-        return;
-
-        AbstractVirtualTimeCapability * timeCapability = event.window()->painter()->getCapability<AbstractVirtualTimeCapability>();
-
-        if (timeCapability && timeCapability->enabled())
-        {
-            timeCapability->update(std::chrono::duration_cast<std::chrono::duration<float>>(event.elapsed()).count());
-            event.window()->repaint();
-        }
-    }
+    event.window()->virtualTimeController()->update();
+    event.window()->repaint();
+}
 
 } // namespace gloperate_glfw

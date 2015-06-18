@@ -8,11 +8,14 @@
 #include <QWidget>
 #include <gloperate-qt/qt-includes-end.h>
 
-#include <gloperate/painter/AbstractVirtualTimeCapability.h>
-#include <gloperate/base/ChronoTimer.h>
-
 #include <gloperate-qt/QtOpenGLWindowBase.h>
 #include <gloperate-qt/gloperate-qt_api.h>
+
+
+namespace gloperate
+{
+class VirtualTimeController;
+}
 
 
 namespace gloperate_qt
@@ -44,7 +47,7 @@ public:
     */
     TimePropagator(gloperate_qt::QtOpenGLWindowBase * window);
     
-    void setCapability(gloperate::AbstractVirtualTimeCapability * capability);
+    void setController(gloperate::VirtualTimeController * controller);
 
 protected slots:
     /**
@@ -55,9 +58,8 @@ protected slots:
 
 protected:
     gloperate_qt::QtOpenGLWindowBase         * m_window;     /**< Window that is updated when the timer has elapsed */
-    gloperate::AbstractVirtualTimeCapability * m_capability; /**< VirtualTimeCapability that is informed about the time change */
+    gloperate::VirtualTimeController         * m_controller; /**< VirtualTimeController that is triggered */
     QScopedPointer<QTimer> m_timer; /**< Qt timer for continuous updates */
-    gloperate::ChronoTimer m_time;  /**< Time measurement */
 };
 
 } // namespace gloperate_qt

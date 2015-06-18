@@ -11,6 +11,8 @@
 #include <gloperate/painter/ContextFormat.h>
 #include <gloperate/painter/AbstractVirtualTimeCapability.h>
 
+#include <gloperate/tools/VirtualTimeController.h>
+
 #include <gloperate-glfw/Application.h>
 #include <gloperate-glfw/Context.h>
 #include <gloperate-glfw/WindowEventHandlerBase.h>
@@ -473,6 +475,8 @@ void Window::setPainter(gloperate::Painter * painter)
     if (m_painter)
         removeTimer(0);
 
+    m_virtualTime->setCapability(nullptr);
+
     m_painter = painter;
 
     if (!m_painter)
@@ -481,8 +485,10 @@ void Window::setPainter(gloperate::Painter * painter)
     gloperate::AbstractVirtualTimeCapability * timeCapability = 
         m_painter->getCapability<gloperate::AbstractVirtualTimeCapability>();
 
-    if (timeCapability)
+    if (timeCapability) {
         addTimer(0, 0, false);
+        m_virtualTime->setCapability(timeCapability);
+    }
 }
 
 gloperate::ResourceManager & Window::resourceManager()

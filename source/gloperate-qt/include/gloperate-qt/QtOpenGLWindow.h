@@ -6,6 +6,7 @@
 #include <globjects/base/ref_ptr.h>
 
 #include <gloperate/painter/Painter.h>
+#include <gloperate/base/AbstractWindow.h>
 
 #include <gloperate-qt/QtOpenGLWindowBase.h>
 #include <gloperate-qt/TimePropagator.h>
@@ -26,7 +27,7 @@ namespace gloperate_qt
 *  @brief
 *    Qt window that can be used for rendering with gloperate and OpenGL
 */
-class GLOPERATE_QT_API QtOpenGLWindow : public QtOpenGLWindowBase
+class GLOPERATE_QT_API QtOpenGLWindow : public QtOpenGLWindowBase, public gloperate::AbstractWindow
 {
 
 
