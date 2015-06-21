@@ -45,6 +45,7 @@ protected slots:
     void on_timeSpinBox_valueChanged(double value);
     void on_speedSlider_valueChanged(int value);
     void on_speedSpinBox_valueChanged(double value);
+    void on_stopButton_clicked();
 
     void updateTimeUI(double time);
     void updateDurationUI(double duration);

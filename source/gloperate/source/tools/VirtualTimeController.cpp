@@ -8,6 +8,7 @@ namespace gloperate
 
 VirtualTimeController::VirtualTimeController(AbstractVirtualTimeCapability * capability)
 : m_capability(nullptr)
+, m_active(false)
 , m_loop(true)
 , m_speed(1.0)
 , m_time(0.0)
@@ -22,16 +23,30 @@ void VirtualTimeController::setCapability(AbstractVirtualTimeCapability * capabi
     m_capability = capability;
 
     if (m_capability != nullptr) {
-        m_capabilityConnections.emplace_back(m_capability->onEnabledChanged.connect(onActiveChanged));
         m_capabilityConnections.emplace_back(m_capability->onLoopDurationChanged.connect(onDurationChanged));
-
-        setActive(m_capability->enabled());
+        m_capabilityConnections.emplace_back(m_capability->onEnabledChanged.connect([this](const bool & enabled) {
+            if (active())
+            {
+                initializeTimer();
+            }
+            onActiveChanged(active());
+        }));
     }
 }
 
 AbstractVirtualTimeCapability * VirtualTimeController::capability() const
 {
     return m_capability;
+}
+
+void VirtualTimeController::initializeTimer()
+{
+    m_lastTick = Clock::now();
+
+    if (loop() && m_time >= m_capability->loopDuration())
+    {
+        setTime(0.0);
+    }
 }
 
 void VirtualTimeController::update()
@@ -48,25 +63,21 @@ void VirtualTimeController::update()
 
 bool VirtualTimeController::active() const
 {
-    return m_capability != nullptr && m_capability->enabled();
+    return m_active && m_capability != nullptr && m_capability->enabled();
 }
 
 void VirtualTimeController::setActive(bool newActive)
 {
-    if (m_capability == nullptr) {
+    if (m_capability == nullptr)
+    {
         return;
     }
 
-    m_capability->setEnabled(newActive);
+    m_active = newActive;
 
-    if (newActive)
+    if (active())
     {
-        m_lastTick = Clock::now();
-
-        if (loop() && m_time >= m_capability->loopDuration())
-        {
-            setTime(0.0);
-        }
+        initializeTimer();
     }
 
     onActiveChanged(active());
@@ -91,7 +102,8 @@ double VirtualTimeController::time() const
 
 void VirtualTimeController::setTime(double newTime)
 {
-    if (m_capability == nullptr) {
+    if (m_capability == nullptr)
+    {
         return;
     }
 
@@ -125,7 +137,7 @@ double VirtualTimeController::duration() const
 
 bool VirtualTimeController::loop() const
 {
-    return m_loop && std::abs(duration()) >= std::numeric_limits<double>::epsilon();
+    return m_loop;
 }
 
 void VirtualTimeController::setLoop(bool enabled)

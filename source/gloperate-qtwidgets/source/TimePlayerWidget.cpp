@@ -194,4 +194,10 @@ void TimePlayerWidget::on_speedSpinBox_valueChanged(double value)
     m_controller->setSpeed(value);
 }
 
+void TimePlayerWidget::on_stopButton_clicked()
+{
+    m_controller->setActive(false);
+    m_controller->setTime(0.0);
+}
+
 }  // namespace gloperate_qtwidgets

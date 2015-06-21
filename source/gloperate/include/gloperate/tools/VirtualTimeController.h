@@ -50,6 +50,9 @@ public:
     signalzeug::Signal<bool>   onActiveChanged;
 
 protected:
+    void initializeTimer();
+
+protected:
     using Clock = std::chrono::high_resolution_clock;
     using Tick = Clock::time_point;
 
@@ -57,6 +60,7 @@ protected:
     AbstractVirtualTimeCapability * m_capability;
     std::deque<signalzeug::ScopedConnection> m_capabilityConnections;
 
+    bool m_active;
     bool m_loop;
     double m_speed;
 

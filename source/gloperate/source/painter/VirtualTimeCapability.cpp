@@ -9,8 +9,8 @@ namespace gloperate
 
 
 VirtualTimeCapability::VirtualTimeCapability()
-: m_enabled(true)
-, m_duration(2.0 * 3.141592654)
+: m_enabled(false)
+, m_duration(0.0)
 , m_time(0.0)
 , m_delta(0.0)
 {

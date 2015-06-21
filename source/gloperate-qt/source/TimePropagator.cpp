@@ -45,10 +45,10 @@ void TimePropagator::update()
     {
         // Trigger update
         m_controller->update();
-        
-        // Update window
-        m_window->updateGL();
     }
+
+    // Update window
+    m_window->updateGL();
 }
 
 } // namespace gloperate_qt
