@@ -70,6 +70,10 @@ TimePlayerWidget::TimePlayerWidget(VirtualTimeController* controller, QWidget* p
     connect(ui->playPauseButton, &QPushButton::clicked, this, &TimePlayerWidget::togglePlayPause);
 }
 
+TimePlayerWidget::~TimePlayerWidget()
+{
+}
+
 void TimePlayerWidget::setController(gloperate::VirtualTimeController * controller)
 {
     m_controllerConnections.clear();

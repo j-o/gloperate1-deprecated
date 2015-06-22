@@ -27,6 +27,7 @@ class TimePlayerWidget : public QWidget
 
 public:
     explicit TimePlayerWidget(gloperate::VirtualTimeController * controller, QWidget * parent = 0);
+    ~TimePlayerWidget();
 
     void setController(gloperate::VirtualTimeController * controller);
     gloperate::VirtualTimeController * controller() const;
