@@ -9,6 +9,7 @@
 namespace gloperate
 {
 
+class VirtualTimeController;
 class ResourceManager;
 class Painter;
 
@@ -58,6 +59,15 @@ public:
     */
     const gloperate::ResourceManager & resourceManager() const;
 
+    /**
+    *  @brief
+    *    Get used virtual time controller
+    *
+    *  @return
+    *    VirtualTimeController
+    */
+    VirtualTimeController * virtualTimeController() const;
+
 
 public:
     /**
@@ -78,8 +88,8 @@ public:
     */
     signalzeug::Signal<Painter*> onPainterChanged;
 
-
 protected:
+    std::unique_ptr<VirtualTimeController> m_virtualTime;
     gloperate::Painter * m_painter;
     ResourceManager & m_resourceManager;
 };
