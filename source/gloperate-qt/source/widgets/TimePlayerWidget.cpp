@@ -1,4 +1,4 @@
-#include <gloperate-qtwidgets/TimePlayerWidget.h>
+#include <gloperate-qt/widgets/TimePlayerWidget.h>
 #include "ui_TimePlayerWidget.h"
 
 #include <QProxyStyle>
@@ -10,7 +10,7 @@
 using namespace gloperate;
 
 
-namespace gloperate_qtwidgets
+namespace gloperate_qt
 {
 
 namespace
@@ -204,4 +204,4 @@ void TimePlayerWidget::on_stopButton_clicked()
     m_controller->setTime(0.0);
 }
 
-}  // namespace gloperate_qtwidgets
+}  // namespace gloperate_qt

@@ -1,12 +1,12 @@
-#include <gloperate-qtwidgets/VirtualTimeControlWidget.h>
+#include <gloperate-qt/widgets/VirtualTimeControlWidget.h>
 
-#include <gloperate-qtwidgets/TimePlayerWidget.h>
+#include <gloperate-qt/widgets/TimePlayerWidget.h>
 
 
 using namespace widgetzeug;
 
 
-namespace gloperate_qtwidgets
+namespace gloperate_qt
 {
 
 VirtualTimeControlWidget::VirtualTimeControlWidget(gloperate::VirtualTimeController * controller, const QString & title, QWidget * parent, Qt::WindowFlags flags)
@@ -26,4 +26,4 @@ VirtualTimeControlWidget::~VirtualTimeControlWidget()
 {
 }
 
-} /* namespace gloperate_qtwidgets */
+} /* namespace gloperate_qt */

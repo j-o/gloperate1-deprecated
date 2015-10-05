@@ -13,7 +13,7 @@ class VirtualTimeController;
 }  // namespace gloperate
 
 
-namespace gloperate_qtwidgets
+namespace gloperate_qt
 {
 
 namespace Ui
@@ -62,4 +62,4 @@ protected:
     std::deque<signalzeug::ScopedConnection> m_controllerConnections;
 };
 
-} // namespace gloperate_qtwidgets
+} // namespace gloperate_qt

@@ -5,7 +5,7 @@
 
 #include <widgetzeug/DockableScrollAreaWidget.h>
 
-#include <gloperate-qtwidgets/gloperate-qtwidgets_api.h>
+#include <gloperate-qt/gloperate-qt_api.h>
 
 
 namespace gloperate
@@ -14,12 +14,12 @@ namespace gloperate
 }  // namespace gloperate
 
 
-namespace gloperate_qtwidgets
+namespace gloperate_qt
 {
 
 class TimePlayerWidget;
 
-class GLOPERATE_QTWIDGETS_API VirtualTimeControlWidget : public widgetzeug::DockableScrollAreaWidget
+class GLOPERATE_QT_API VirtualTimeControlWidget : public widgetzeug::DockableScrollAreaWidget
 {
     Q_OBJECT
 
@@ -32,4 +32,4 @@ private:
     std::unique_ptr<TimePlayerWidget> m_timePlayerWidget;
 };
 
-} /* namespace gloperate_qtwidgets */
+} /* namespace gloperate_qt */

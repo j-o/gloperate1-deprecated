@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>gloperate_qtwidgets::TimePlayerWidget</class>
- <widget class="QWidget" name="gloperate_qtwidgets::TimePlayerWidget">
+ <class>gloperate_qt::TimePlayerWidget</class>
+ <widget class="QWidget" name="gloperate_qt::TimePlayerWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
