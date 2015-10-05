@@ -8,7 +8,7 @@ namespace gloperate
 
 VirtualTimeController::VirtualTimeController(AbstractVirtualTimeCapability * capability)
 : m_capability(nullptr)
-, m_active(false)
+, m_active(true)
 , m_loop(true)
 , m_speed(1.0)
 , m_time(0.0)

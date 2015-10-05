@@ -1,27 +1,31 @@
-#include <gloperate-glfw/WindowEventHandler.h>
 
-#include <globjects/globjects.h>
+#include <gloperate-glfw/WindowEventHandler.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <gloperate-glfw/Window.h>
-#include <gloperate-glfw/events.h>
+#include <globjects/globjects.h>
 
 #include <gloperate/painter/AbstractViewportCapability.h>
 #include <gloperate/painter/AbstractVirtualTimeCapability.h>
 #include <gloperate/painter/AbstractInputCapability.h>
-
-#include <gloperate/tools/ScreenshotTool.h>
+#include <gloperate/tools/ImageExporter.h>
 #include <gloperate/tools/VirtualTimeController.h>
+
+#include <gloperate-glfw/Window.h>
+#include <gloperate-glfw/events.h>
 
 
 using namespace gloperate;
 
+
 namespace gloperate_glfw
 {
 
-/** \brief Convert GLFW mouse button into gloperate mouse button
+
+/**
+*  @brief
+*    Convert GLFW mouse button into gloperate mouse button
 */
 static gloperate::MouseButton fromGLFWMouseButton(int button)
 {
@@ -48,6 +52,7 @@ static gloperate::Key fromGLFWKeyCode(int key)
     // We are using the same key code table as GLFW
     return static_cast<gloperate::Key>(key);
 }
+
 
 WindowEventHandler::WindowEventHandler()
 {
@@ -92,13 +97,13 @@ void WindowEventHandler::keyPressEvent(KeyEvent & event)
 {
     if (event.key() == GLFW_KEY_F10)
     {
-        if (ScreenshotTool::isApplicableTo(event.window()->painter()))
+		if (ImageExporter::isApplicableTo(event.window()->painter()))
         {
-            ScreenshotTool screenshot(event.window()->painter(), event.window()->resourceManager());
+			ImageExporter image(event.window()->painter(), event.window()->resourceManager());
 
-            screenshot.initialize();
+            image.initialize();
 
-            screenshot.save("screenshot.png");
+            image.save("image.png");
         }
     }
 
@@ -163,7 +168,8 @@ void WindowEventHandler::mouseReleaseEvent(MouseEvent & event)
 void WindowEventHandler::timerEvent(TimerEvent & event)
 {
     event.window()->virtualTimeController()->update();
-    event.window()->repaint();
-}
+            event.window()->repaint();
+        }
+
 
 } // namespace gloperate_glfw
