@@ -1,23 +1,38 @@
 #include <gloperate/base/AbstractWindow.h>
-#include <gloperate/base/make_unique.hpp>
-#include <gloperate/tools/VirtualTimeController.h>
 
 
 namespace gloperate
 {
 
-AbstractWindow::AbstractWindow()
-: m_virtualTime(make_unique<VirtualTimeController>(nullptr))
+AbstractWindow::AbstractWindow(ResourceManager & resourceManager)
+:   m_painter(nullptr)
+,   m_resourceManager(resourceManager)
 {
 }
 
-AbstractWindow::~AbstractWindow()
+gloperate::Painter * AbstractWindow::painter() const
 {
+    return m_painter;
 }
 
-VirtualTimeController * AbstractWindow::virtualTimeController() const
+void AbstractWindow::setPainter(gloperate::Painter * painter)
 {
-    return m_virtualTime.get();
+    if (painter != m_painter)
+    {
+        onPainterChanged(painter);
+    }
+
+    m_painter = painter;
+}
+
+gloperate::ResourceManager & AbstractWindow::resourceManager()
+{
+    return m_resourceManager;
+}
+
+const gloperate::ResourceManager & AbstractWindow::resourceManager() const
+{
+    return m_resourceManager;
 }
 
 } /* namespace gloperate */
