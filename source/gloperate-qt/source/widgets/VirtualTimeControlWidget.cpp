@@ -13,7 +13,6 @@ VirtualTimeControlWidget::VirtualTimeControlWidget(gloperate::VirtualTimeControl
 :   DockableScrollAreaWidget(title, parent, flags)
 ,   m_timePlayerWidget(new TimePlayerWidget(controller, this))
 {
-    m_timePlayerWidget->setWindowTitle("");
     addWidget(m_timePlayerWidget.get());
 }
 
