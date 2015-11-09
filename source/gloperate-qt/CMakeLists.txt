@@ -149,9 +149,11 @@ set(headers
     ${header_path}/widgets/ImageExporterOutputWidget.h
     ${header_path}/widgets/ImageExporterResolutionWidget.h
     ${header_path}/widgets/ImageExporterTilebasedWidget.h
+    ${header_path}/widgets/PluginPathWidget.h
+    ${header_path}/widgets/PluginConfigWidget.h
+    ${header_path}/widgets/PluginWidget.h
     ${header_path}/widgets/TimePlayerWidget.h
     ${header_path}/widgets/VirtualTimeControlWidget.h
-
 
     ${header_path}/gloperate-qt_api.h
 )
@@ -189,10 +191,13 @@ set(sources
     ${source_path}/widgets/ImageExporterResolutionWidget.ui
     ${source_path}/widgets/ImageExporterTilebasedWidget.cpp
     ${source_path}/widgets/ImageExporterTilebasedWidget.ui
+    ${source_path}/widgets/PluginPathWidget.cpp
+    ${source_path}/widgets/PluginConfigWidget.cpp
+    ${source_path}/widgets/PluginWidget.cpp
+    ${source_path}/widgets/PluginWidget.ui
     ${source_path}/widgets/TimePlayerWidget.cpp
     ${source_path}/widgets/TimePlayerWidget.ui
     ${source_path}/widgets/VirtualTimeControlWidget.cpp
-
 )
 
 # Group source files
