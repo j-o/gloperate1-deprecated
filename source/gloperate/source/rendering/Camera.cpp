@@ -12,13 +12,15 @@ namespace gloperate
 {
 
 
-Camera::Camera(const vec3 & eye, const vec3 & center, const vec3 & up)
+Camera::Camera(const vec3 & eye, const vec3 & center, const vec3 & up, ProjectionType projectionType)
 : m_dirty(false)
 , m_autoUpdate(false)
 , m_eye(eye)
 , m_center(center)
 , m_up(up)
+, m_projectionType(projectionType)
 , m_fovy(radians(40.f))
+, m_viewHeight(2.f)
 , m_aspect(1.f)
 , m_zNear(0.1f)
 , m_zFar(64.0f)
@@ -98,6 +100,20 @@ void Camera::setUp(const vec3 & up)
     dirty();
 }
 
+Camera::ProjectionType Camera::projectionType() const
+{
+    return m_projectionType;
+}
+
+void Camera::setProjectionType(ProjectionType projectionType)
+{
+    if (m_projectionType == projectionType)
+        return;
+
+    m_projectionType = projectionType;
+    dirty();
+}
+
 float Camera::zNear() const
 {
     return m_zNear;
@@ -109,7 +125,6 @@ void Camera::setZNear(const float zNear)
         return;
 
     m_zNear = zNear;
-    assert(m_zNear > 0.0);
 
     dirty();
 }
@@ -142,6 +157,22 @@ void Camera::setFovy(const float fovy)
 
     m_fovy = fovy;
     assert(m_fovy > 0.0);
+
+    dirty();
+}
+
+float Camera::viewHeight() const
+{
+    return m_viewHeight;
+}
+
+void Camera::setViewHeight(const float viewHeight)
+{
+    if (std::abs(viewHeight - m_viewHeight) < std::numeric_limits<float>::epsilon())
+        return;
+
+    m_viewHeight = viewHeight;
+    assert(m_viewHeight > 0.0);
 
     dirty();
 }
@@ -182,7 +213,7 @@ const mat4 & Camera::projection() const
         update();
 
     if (!m_projection.isValid())
-        m_projection.setValue(perspective(m_fovy, m_aspect, m_zNear, m_zFar));
+        m_projection.setValue(computeProjection());
 
     return m_projection.value();
 }
@@ -264,6 +295,20 @@ void Camera::invalidateMatrices() const
     m_viewProjection.invalidate();
     m_viewProjectionInverted.invalidate();
     m_normal.invalidate();
+}
+
+glm::mat4 Camera::computeProjection() const
+{
+    switch (m_projectionType)
+    {
+        case ProjectionType::PERSPECTIVE:
+            return perspective(m_fovy, m_aspect, m_zNear, m_zFar);
+        case ProjectionType::ORTHO:
+            return ortho(-m_viewHeight * m_aspect * 0.5f, m_viewHeight * m_aspect * 0.5f, -m_viewHeight * 0.5f, m_viewHeight * 0.5f, m_zNear, m_zFar);
+        default:
+            assert(false && "invalid projection type");
+            return {};
+    }
 }
 
 

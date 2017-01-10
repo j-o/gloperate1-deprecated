@@ -15,10 +15,14 @@ namespace gloperate
 
 /**
 *  @brief
-*    Represents matrices for a typical 3D perspective look-at camera.
+*    Represents matrices for a typical 3D perspective or orthographic look-at camera.
 *
-*    A camera is specified via near, far, fovy, as well as an eye, a center, and an up 
-*    vector. Camera itself does not use any OpenGL calls, but merely provides lazy
+*    A camera is specified via an eye, a center, and an up vector, as well as a
+*    projection type (perspective or orthographic) and its respective parameters
+*    (perspective: near, far, fovy, aspect; orthographic: near, far, view volume height,
+*    aspect).
+*    
+*    Camera itself does not use any OpenGL calls, but merely provides lazy
 *    math to all common matrices required for affine transformation of a scene,
 *    namely the view and projection matrices, their combination and all related
 *    inverses (as well as a normal matrix).
@@ -27,6 +31,14 @@ namespace gloperate
 */
 class GLOPERATE_API Camera
 {
+public:
+    enum class ProjectionType
+    {
+        PERSPECTIVE,
+        orthographic
+    };
+
+
 public:
     cppexpose::Signal<> invalidated;   /**< Called when the camera has been modified */
 
@@ -42,10 +54,13 @@ public:
     *    Look-at position
     *  @param[in] up
     *    Up-vector
+    *  @param[in] projectionType
+    *    Projection type (perspective/orthographic)
     */
     Camera(const glm::vec3 & eye    = glm::vec3(0.0, 0.0, 1.0),
            const glm::vec3 & center = glm::vec3(0.0, 0.0, 0.0),
-           const glm::vec3 & up     = glm::vec3(0.0, 1.0, 0.0) );
+           const glm::vec3 & up     = glm::vec3(0.0, 1.0, 0.0),
+           ProjectionType projectionType = ProjectionType::PERSPECTIVE);
 
     /**
     *  @brief
@@ -133,6 +148,24 @@ public:
 
     /**
     *  @brief
+    *    Get projection type
+    *
+    *  @return
+    *    Projection type
+    */
+    ProjectionType projectionType() const;
+
+    /**
+    *  @brief
+    *    Set projection type
+    *
+    *  @param[in] projectionType
+    *    Projection type
+    */
+    void setProjectionType(ProjectionType projectionType);
+
+    /**
+    *  @brief
     *    Get near plane
     *
     *  @return
@@ -169,7 +202,7 @@ public:
 
     /**
     *  @brief
-    *    Get field-of-view angle (Y)
+    *    Get field-of-view angle (Y) for perspective projection
     *
     *  @return
     *    Angle
@@ -178,12 +211,30 @@ public:
 
     /**
     *  @brief
-    *    Set field-of-view angle (Y)
+    *    Set field-of-view angle (Y) for perspective projection
     *
     *  @param[in] fovy
     *    Angle
     */
     void setFovy(float fovy);
+
+    /**
+    *  @brief
+    *    Get view volume height for orthographic projection
+    *
+    *  @return
+    *    View volume height
+    */
+    float viewHeight() const;
+
+    /**
+    *  @brief
+    *    Set view volume height for orthographic projection
+    *
+    *  @param[in] viewHeight
+    *    View volume height
+    */
+    void setViewHeight(float viewHeight);
 
     /**
     *  @brief
@@ -303,6 +354,15 @@ protected:
     */
     void invalidateMatrices() const;
 
+    /**
+    *  @brief
+    *    Computes projection matrix according to selected projection type
+    *    
+    *  @return
+    *    Projection matrix
+    */
+    glm::mat4 computeProjection() const;
+
 
 protected:
     // Internal data
@@ -310,13 +370,15 @@ protected:
     bool m_autoUpdate;      /**< 'true' if camera is updated automatically, else 'false' */
 
     // Camera data
-    glm::vec3 m_eye;        /**< Camera position */
-    glm::vec3 m_center;     /**< Look-at position */
-    glm::vec3 m_up;         /**< Up-vector */
-    float     m_fovy;       /**< Field-of-view angle (Y) */
-    float     m_aspect;     /**< Aspect ratio (width / height) */
-    float     m_zNear;      /**< Near plane */
-    float     m_zFar;       /**< Far plane */
+    glm::vec3      m_eye;            /**< Camera position */
+    glm::vec3      m_center;         /**< Look-at position */
+    glm::vec3      m_up;             /**< Up-vector */
+    ProjectionType m_projectionType; /**< Projecton type (perspective/orthographic */
+    float          m_fovy;           /**< Field-of-view angle (Y) for perspective projection */
+    float          m_viewHeight;     /**< View volume height for orthographic projection */
+    float          m_aspect;         /**< Aspect ratio (width / height) */
+    float          m_zNear;          /**< Near plane */
+    float          m_zFar;           /**< Far plane */
 
     // Camera matrices
     gloperate::CachedValue<glm::mat4> m_view;                   /**< View matrix */
