@@ -303,7 +303,7 @@ glm::mat4 Camera::computeProjection() const
     {
         case ProjectionType::PERSPECTIVE:
             return perspective(m_fovy, m_aspect, m_zNear, m_zFar);
-        case ProjectionType::ORTHO:
+        case ProjectionType::ORTHOGRAPHIC:
             return ortho(-m_viewHeight * m_aspect * 0.5f, m_viewHeight * m_aspect * 0.5f, -m_viewHeight * 0.5f, m_viewHeight * 0.5f, m_zNear, m_zFar);
         default:
             assert(false && "invalid projection type");

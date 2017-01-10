@@ -35,7 +35,7 @@ public:
     enum class ProjectionType
     {
         PERSPECTIVE,
-        orthographic
+        ORTHOGRAPHIC
     };
 
 
