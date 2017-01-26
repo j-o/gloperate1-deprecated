@@ -2,16 +2,13 @@
 #pragma once
 
 
-#include <map>
 #include <vector>
 #include <unordered_map>
-#include <string>
 
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
 #include <globjects/base/ref_ptr.h>
-#include <globjects/base/Referenced.h>
 #include <globjects/Texture.h>
 
 #include <gloperate-text/gloperate-text_api.h>
@@ -49,7 +46,7 @@ namespace gloperate_text
 *    This class does not provide dpi awareness. This has to be
 *    handled outside of this class, e.g., during layouting and rendering.
 */
-class GLOPERATE_TEXT_API FontFace : public globjects::Referenced
+class GLOPERATE_TEXT_API FontFace
 {
 public:
     /**
