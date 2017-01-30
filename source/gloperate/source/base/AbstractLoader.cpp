@@ -7,7 +7,7 @@ namespace gloperate
 
 
 AbstractLoader::AbstractLoader(Environment * environment)
-: EnvironmentUser(environment)
+: m_environment(environment)
 {
 }
 

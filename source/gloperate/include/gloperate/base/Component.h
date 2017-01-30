@@ -2,7 +2,9 @@
 #pragma once
 
 
-#include <cppexpose/plugin/Component.h>
+#include <cppexpose/plugin/AbstractComponent.h>
+
+#include <gloperate/gloperate_api.h>
 
 
 namespace gloperate
@@ -10,64 +12,77 @@ namespace gloperate
 
 
 class Environment;
-class EnvironmentUser;
-
-
-template <typename Type>
-using IsGloperateComponent = typename std::enable_if<std::is_base_of<EnvironmentUser, Type>::value>::type;
-
-}
-
-
-namespace cppexpose
-{
+class Stage;
 
 
 /**
 *  @brief
-*    Represents a component of type inherited from EnvironmentUser
+*    Component base class for gloperate classes
 */
-template <typename Type>
-class TypedComponent<Type, gloperate::IsGloperateComponent<Type>> : public AbstractComponent
+template <class BaseType>
+class AbstractComponent : public cppexpose::AbstractComponent
 {
 public:
-    TypedComponent(
-      const std::string & name
-    , const std::string & description
-    , const std::string & type
-    , const std::string & tags
-    , const std::string & icon
-    , const std::string & annotations
-    , const std::string & vendor
-    , const std::string & version);
+    AbstractComponent();
+    virtual ~AbstractComponent();
 
-    virtual Type * createInstance(gloperate::Environment * environment) const = 0;
+    virtual BaseType * createInstance(gloperate::Environment * environment) = 0;
 };
 
 
 /**
 *  @brief
-*    Represents a concrete component of type inherited from EnvironmentUser
+*    Component class for gloperate classes
 */
-template <typename Type, typename BaseType>
-class Component<Type, BaseType, gloperate::IsGloperateComponent<BaseType>> : public TypedComponent<BaseType>
+template <class BaseType, class Type>
+class Component : public AbstractComponent<BaseType>
 {
 public:
-    Component(
-      const std::string & name
-    , const std::string & description
-    , const std::string & type
-    , const std::string & tags
-    , const std::string & icon
-    , const std::string & annotations
-    , const std::string & vendor
-    , const std::string & version);
+    Component();
+    virtual ~Component();
 
-    virtual BaseType * createInstance(gloperate::Environment * environment) const override;
+    virtual BaseType * createInstance(gloperate::Environment * environment) override;
 };
 
 
-} // namespace cppexpose
+/**
+*  @brief
+*    Component base class for pipelines and stages
+*/
+template <>
+class AbstractComponent<gloperate::Stage> : public cppexpose::AbstractComponent
+{
+public:
+    AbstractComponent()
+    {
+    }
+
+    virtual ~AbstractComponent()
+    {
+    }
+
+    virtual gloperate::Stage * createInstance(gloperate::Environment * environment) = 0;
+    virtual gloperate::Stage * createInstance(gloperate::Environment * environment, const std::string & name) = 0;
+};
+
+
+/**
+*  @brief
+*    Component class for pipelines and stages
+*/
+template <class Type>
+class Component<gloperate::Stage, Type> : public AbstractComponent<gloperate::Stage>
+{
+public:
+    Component();
+    virtual ~Component();
+
+    virtual gloperate::Stage * createInstance(gloperate::Environment * environment) override;
+    virtual gloperate::Stage * createInstance(gloperate::Environment * environment, const std::string & name) override;
+};
+
+
+} // namespace gloperate
 
 
 #include <gloperate/base/Component.inl>

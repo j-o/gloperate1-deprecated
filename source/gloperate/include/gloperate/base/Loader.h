@@ -27,8 +27,11 @@ public:
     /**
     *  @brief
     *    Constructor
+    *
+    *  @param[in] environment
+    *    Environment to which the loader belongs (must NOT be null!)
     */
-    explicit Loader(Environment * environment);
+    Loader(Environment * environment);
 
     /**
     *  @brief

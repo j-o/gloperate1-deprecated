@@ -1,45 +1,57 @@
 
-#pragma once
-
-
-namespace cppexpose
+namespace gloperate
 {
 
 
-template <typename Type>
-TypedComponent<Type, gloperate::IsGloperateComponent<Type>>::TypedComponent(
-  const std::string & name
-, const std::string & description
-, const std::string & type
-, const std::string & tags
-, const std::string & icon
-, const std::string & annotations
-, const std::string & vendor
-, const std::string & version)
-: AbstractComponent(name, description, type, tags, icon, annotations, vendor, version)
+template <class BaseType>
+AbstractComponent<BaseType>::AbstractComponent()
+{
+}
+
+template <class BaseType>
+AbstractComponent<BaseType>::~AbstractComponent()
 {
 }
 
 
-template <typename Type, typename BaseType>
-Component<Type, BaseType, gloperate::IsGloperateComponent<BaseType>>::Component(
-  const std::string & name
-, const std::string & description
-, const std::string & type
-, const std::string & tags
-, const std::string & icon
-, const std::string & annotations
-, const std::string & vendor
-, const std::string & version)
-: TypedComponent<BaseType>(name, description, type, tags, icon, annotations, vendor, version)
+template <class BaseType, class Type>
+Component<BaseType, Type>::Component()
 {
 }
 
-template <typename Type, typename BaseType>
-BaseType * Component<Type, BaseType, gloperate::IsGloperateComponent<BaseType>>::createInstance(gloperate::Environment * environment) const
+template <class BaseType, class Type>
+Component<BaseType, Type>::~Component()
+{
+}
+
+template <class BaseType, class Type>
+BaseType * Component<BaseType, Type>::createInstance(gloperate::Environment * environment)
 {
     return new Type(environment);
 }
 
 
-} // namespace cppexpose
+template <class Type>
+Component<gloperate::Stage, Type>::Component()
+{
+}
+
+template <class Type>
+Component<gloperate::Stage, Type>::~Component()
+{
+}
+
+template <class Type>
+gloperate::Stage * Component<gloperate::Stage, Type>::createInstance(gloperate::Environment * environment)
+{
+    return new Type(environment);
+}
+
+template <class Type>
+gloperate::Stage * Component<gloperate::Stage, Type>::createInstance(gloperate::Environment * environment, const std::string & name)
+{
+    return new Type(environment, name);
+}
+
+
+} // namespace gloperate

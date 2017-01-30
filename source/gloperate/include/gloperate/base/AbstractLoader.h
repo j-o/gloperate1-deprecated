@@ -5,9 +5,6 @@
 #include <string>
 #include <vector>
 
-#include <gloperate/base/EnvironmentUser.h>
-
-// Include Component<> specialization for downstream plugins
 #include <gloperate/base/Component.h>
 
 
@@ -15,16 +12,30 @@ namespace gloperate
 {
 
 
+class Environment;
+
+
 /**
 *  @brief
 *    Loader base class
 */
-class GLOPERATE_API AbstractLoader : public EnvironmentUser
+class GLOPERATE_API AbstractLoader 
 {
+public:
+    // Define component types
+    using AbstractComponentType = gloperate::AbstractComponent<AbstractLoader>;
+
+    template <typename Type>
+    using ComponentType = gloperate::Component<AbstractLoader, Type>;
+
+
 public:
     /**
     *  @brief
     *    Constructor
+    *
+    *  @param[in] environment
+    *    Environment to which the loader belongs (must NOT be null!)
     */
     explicit AbstractLoader(Environment * environment);
 
@@ -69,6 +80,10 @@ public:
     *    Example string: "*.mft *.any *.txt"
     */
     virtual std::string allLoadingTypes() const = 0;
+
+
+protected:
+    Environment * m_environment; ///< Gloperate environment to which the loaded belongs
 };
 
 

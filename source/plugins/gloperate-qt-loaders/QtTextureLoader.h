@@ -42,8 +42,11 @@ public:
     /**
     *  @brief
     *    Constructor
+    *
+    *  @param[in] environment
+    *    Environment to which the loader belongs (must NOT be null!)
     */
-    explicit QtTextureLoader(gloperate::Environment * environment);
+    QtTextureLoader(gloperate::Environment * environment);
 
     /**
     *  @brief
